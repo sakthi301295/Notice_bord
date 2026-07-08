@@ -1,0 +1,26 @@
+// Prisma schema for the Notice Board assignment.
+// Database: any MySQL-compatible hosted DB (TiDB Cloud recommended).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Notice {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(255)
+  body        String   @db.Text
+  category    String   @db.VarChar(20) // "Exam" | "Event" | "General"
+  priority    String   @default("Normal") @db.VarChar(10) // "Normal" | "Urgent"
+  publishDate DateTime
+  image       String?  @db.LongText // optional base64 data-URL for the bonus image field
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([priority])
+  @@index([publishDate])
+}
